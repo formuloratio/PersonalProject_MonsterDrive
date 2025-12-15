@@ -80,12 +80,8 @@
     <td><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"></td>
   </tr>
   <tr>
-    <td>Design</td>
-    <td><img src="https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white"></td>
-  </tr>
-  <tr>
-    <td>Documentation</td>
-    <td><img src="https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white"></td>
+    <td>Distribution Platform</td>
+    <td>  <img width="100" height="22" alt="구글플레이스토어" src="https://github.com/user-attachments/assets/e69f8f70-9ba7-41e2-84a3-5c8946f77ef1"> </td>
   </tr>
 </table>
 
@@ -98,6 +94,7 @@
     <th align="left" width="180"> 항목 </th>
     <th align="left" width="500"> 내용 </th>
   </tr>
-  <tr><td> 맵 타일셋 </td><td> [Free Topdown Fantasy - Forest - Pixelart Tileset] (https://aamatniekss.itch.io/topdown-fantasy-forest) </td></tr>
+  <tr><td> 자동차 효과음 </td><td> [Car Engine Sound - i6 German Free] (https://assetstore.unity.com/packages/audio/sound-fx/transportation/i6-german-free-engine-sound-pack-106037?srsltid=AfmBOopHcGX1xFTncRWssJAH710NPDsPhKaz97XG3vXm9XLLeOe_M30q) </td></tr>
+  <tr><td> 배경 </td><td> [Mini Retro - 16bit action/adventure music] (https://assetstore.unity.com/packages/audio/music/mini-retro-16bit-action-adventure-music-315925?srsltid=AfmBOoqHsqErOhten5ja9nxa63NRTcqvXSrvxUyHiJYHfXPO-9vPwimA) </td></tr>
   <tr><td> 그 외 </td><td> AI </td></tr>
 </table>
