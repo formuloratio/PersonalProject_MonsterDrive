@@ -52,9 +52,6 @@
 ## ⏲️ 트러블슈팅
 
 
-<img width="761" height="595" alt="스크린샷 2025-12-15 012749" src="https://github.com/user-attachments/assets/3e8b7c57-d537-4e3f-9bbc-c69783e68e70" />
-<img width="1531" height="631" alt="스크린샷 2025-12-15 012826" src="https://github.com/user-attachments/assets/33020d7b-dfee-4b02-8ee2-3f98764d4528" />
-
 
 ---
 
