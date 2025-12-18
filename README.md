@@ -472,22 +472,820 @@
 
   </details>
 
-* ### 제목
+* ### 게임 플레이
 
   <details>
-    <summary> .cs </summary>
+    <summary> Car.cs </summary>
 
-
+    ```csharp
+    using UnityEngine;
+    
+    public class Car : MonoBehaviour
+    {
+        //Car 컴퍼넌트에 차 데이터 담을 공간
+        public CarData carData;
+    }
+    ```
 
   </details>
 
   <details>
-    <summary> .cs </summary>
+    <summary> Collision.cs </summary>
 
-
+    ```csharp
+    using System.Collections;
+    using UnityEngine;
+    using UnityEngine.SceneManagement;
+    
+    public class Collision : MonoBehaviour
+    {
+        public AudioClip clip;
+        public static int newCoin = 0;
+        public static int copperCoin = 0;
+    
+        void GameOver()
+        {
+            newCoin = 0;
+            copperCoin = KilledScoreText.newScore;
+            if (KilledScoreText.newScore > User.Instance.bestScore)
+            {
+                int oldBestScore = User.Instance.bestScore;
+                User.Instance.bestScore = KilledScoreText.newScore;
+                newCoin = User.Instance.bestScore - oldBestScore;
+            }
+            User.Instance.AddCoin(newCoin); // 유저-코인 함수에 현재의 Score.numOfMonsterKilled 수 만큼 추가
+            User.Instance.AddCopperCoin(copperCoin);
+            if (User.Instance.hp < 1)
+            {
+                User.Instance.hp = 1;
+            }
+            SceneManager.LoadScene("2_GameOverScene");
+        }
+    
+        public void OnTriggerEnter2D(Collider2D collision)
+        {
+            if (collision.tag == "Car")
+            {
+                if (User.Instance.hp > 1)
+                {
+                    SoundManager.instance.SFXPlay("Boom_End", clip);
+                    User.Instance.AddHp(-1);
+                }
+                else if (User.Instance.hp == 1)
+                {
+                    User.Instance.AddHp(-1);
+                    StartCoroutine("DestroyAnimation");
+                }
+            }
+        }
+    
+        private IEnumerator DestroyAnimation()
+        {
+            SoundManager.instance.SFXPlay("Boom_End", clip); // 사운드 넣기 코드 02
+            Time.timeScale = 0f;
+            yield return new WaitForSecondsRealtime(0.3f); //시간 멈춘 후에도 동작
+            GameOver();
+            Time.timeScale = 1f;
+        }
+    }
+    ```
 
   </details>
 
+  <details>
+    <summary> Destroy.cs </summary>
+
+    ```csharp
+    using UnityEngine;
+    
+    public class Destroy : MonoBehaviour
+    {
+        [SerializeField] Animator animator;
+    
+        public AudioClip clip; // 사운드 넣기 코드 02
+    
+        void Start()
+        {
+            animator = GetComponent<Animator>(); //현재 게임 오브젝트에 있는 애니메이터 컴포넌트를 반환하는 함수
+        }
+    
+        void OnTriggerEnter2D(Collider2D collision)
+        {
+            if (collision.tag == "Car")
+            {
+                animator.SetBool("Change", true);
+                SoundManager.instance.SFXPlay("Boom", clip); // 사운드 넣기 코드 02
+                Destroy(gameObject, 0.2f);
+                //Score.Instance.AddKilledMonster(1); // 유저-코인 함수에 현재의 Score.savedMoney 수 만큼 추가
+                KilledScoreText.newScore += 1;
+            }
+        }
+    }
+    ```
+
+  </details>
+
+  <details>
+    <summary> Driver.cs </summary>
+
+    ```csharp
+    using UnityEngine;
+    
+    public class Driver : MonoBehaviour
+    {
+        public LayerMask wallLayer; // 벽 레이어 지정
+    
+        public bool leftClick = false;
+        public bool rightClick = false;
+        public float horizontalAmount = 0;
+        public static float moveSpeed = 6;
+        public static float horizontalSpeed = 7;
+        public GameObject clip1;
+        public GameObject clip2;
+    
+        public FloatingJoystick joystick;
+    
+        void Update()
+        {
+            if (Input.GetKey(KeyCode.A))
+            {
+                transform.position = transform.position + new Vector3(1, 0, 0) * -horizontalSpeed * Time.deltaTime;
+            }
+    
+            if (Input.GetKey(KeyCode.D))
+            {
+                transform.position = transform.position + new Vector3(1, 0, 0) * horizontalSpeed * Time.deltaTime;
+            }
+        }
+    }
+    ```
+
+  </details>
+
+  <details>
+    <summary> DriveSound1.cs </summary>
+
+    ```csharp
+    using UnityEngine;
+    
+    public class DriveSound1 : MonoBehaviour
+    {
+        public AudioSource bgSound1;
+        
+        public void OnEnable() // 오브젝트 활성화 마다 호출되는 함수
+        {
+            bgSound1.loop = true;
+            bgSound1.volume = 0.2f;
+            bgSound1.Play();
+        }
+    }
+    ```
+
+  </details>
+
+  <details>
+    <summary> DriveSound2.cs </summary>
+
+    ```csharp
+    using UnityEngine;
+    
+    public class DriveSound2 : MonoBehaviour
+    {
+        public AudioSource bgSound2;
+    
+        public void OnEnable()
+        {
+            bgSound2.loop = true;
+            bgSound2.volume = 0.5f;
+            bgSound2.Play();
+        }
+    }
+    ```
+
+  </details>
+
+  <details>
+    <summary> EndLine.cs </summary>
+
+    ```csharp
+    using UnityEngine;
+    
+    public class EndLine : MonoBehaviour
+    {
+        public GameObject roadEnd;
+    
+        void Start()
+        {
+            OnEnable();
+        }
+    
+        void OnEnable()
+        {
+            Invoke("ObjectStart", 60f); //나중에 60초로 맞추기 라인이 지나갈 타이밍
+        }
+    
+        void ObjectStart()
+        {
+            roadEnd.SetActive(true);
+            Invoke("ObjectEnd", 4f); //3.5초뒤 라인 비활성화
+        }
+    
+        void ObjectEnd()
+        {
+            roadEnd.SetActive(false);
+        }
+    }
+    
+    ```
+
+  </details>
+
+  <details>
+    <summary> EndLine_Collision.cs </summary>
+
+    ```csharp
+    using UnityEngine;
+    
+    public class EndLine_Collision : MonoBehaviour
+    {
+        public AudioClip clip;
+    
+        public GameObject nextRoad;
+        public GameObject nextMonster;
+        public GameObject nextSound;
+        public GameObject nextDgMonsterInf;
+        public GameObject thisRoad;
+        public GameObject thisMonster;
+        public GameObject thisSound;
+        public GameObject thisDgMonsterInf;
+    
+        public GameObject thisMonster1;
+        public GameObject thisMonster2;
+        public GameObject thisMonster3;
+        public GameObject thisMonster4;
+        public GameObject thisMonster5;
+        public GameObject thisMonster6;
+        public GameObject thisMonster7;
+        public GameObject thisMonster8;
+        public GameObject nextMonster1;
+        public GameObject nestMonster2;
+    
+        void OnEnable()
+        {
+            thisMonster1.SetActive(false);
+            thisMonster2.SetActive(false);
+            thisMonster3.SetActive(false);
+            thisMonster4.SetActive(false);
+            thisMonster5.SetActive(false);
+            thisMonster6.SetActive(false);
+            thisMonster7.SetActive(false);
+            thisMonster8.SetActive(false);
+            nextMonster1.SetActive(false);
+            nestMonster2.SetActive(false);
+        }
+    
+        void OnDisable()
+        {
+            thisMonster1.SetActive(true);
+            thisMonster2.SetActive(true);
+            thisMonster3.SetActive(true);
+            thisMonster4.SetActive(true);
+            thisMonster5.SetActive(true);
+            thisMonster6.SetActive(true);
+            thisMonster7.SetActive(true);
+            thisMonster8.SetActive(true);
+            nextMonster1.SetActive(true);
+            nestMonster2.SetActive(true);
+        }
+    
+        void OnTriggerEnter2D(Collider2D collision)
+        {
+            if (collision.tag == "Car")
+            {
+                SoundManager.instance.SFXPlay("sound", clip);
+                Invoke("OnNext", 0.3f);
+                User.Instance.AddHp(1);
+            }
+        }
+    
+        public void OnNext()
+        {
+            nextRoad.SetActive(true);
+            nextMonster.SetActive(true);
+            nextSound.SetActive(true);
+            nextDgMonsterInf.SetActive(true);
+    
+            thisRoad.SetActive(false);
+            thisMonster.SetActive(false);
+            thisSound.SetActive(false);
+            thisDgMonsterInf.SetActive(false);
+        }
+    }
+    ```
+
+  </details>
+
+  <details>
+    <summary> FollowCamera.cs </summary>
+
+    ```csharp
+    using UnityEngine;
+    
+    public class FollowCamera : MonoBehaviour
+    {
+        [SerializeField] GameObject thingToFollow;
+    
+        void LateUpdate()
+        {
+            transform.position = thingToFollow.transform.position + new Vector3(0, 0, -10);
+            transform.rotation = thingToFollow.transform.rotation;
+        }
+    }
+    ```
+
+  </details>
+
+  <details>
+    <summary> Hart.cs </summary>
+
+    ```csharp
+    using UnityEngine;
+    using TMPro;
+    
+    public class Hart : MonoBehaviour
+    {
+        public TMP_Text hartText;
+    
+        void Start()
+        {
+            hartText = GetComponentInChildren<TMP_Text>();
+        }
+    
+        void Update()
+        {
+            hartText.text = User.Instance.hp.ToString();
+        }
+    }
+    ```
+
+  </details>
+
+  <details>
+    <summary> KilledScoreText.cs </summary>
+
+    ```csharp
+    using UnityEngine;
+    using TMPro;
+    
+    public class KilledScoreText : MonoBehaviour
+    {
+        TMP_Text GetscoreText;
+        public static int newScore = 0;
+    
+        void Start()
+        {
+            newScore = 0;
+            GetscoreText = GetComponent<TMP_Text>(); //초기화
+        }
+    
+        void Update()
+        {
+            GetscoreText.text = newScore.ToString();
+        }
+    }
+    ```
+
+  </details>
+
+  <details>
+    <summary> Monster.cs </summary>
+
+    ```csharp
+    using UnityEngine;
+    
+    public class Monster : MonoBehaviour
+    {
+        private Vector2 min = new Vector2(-8f, -10f);
+        private Vector2 max = new Vector2(8f, 30f);
+    
+        void Awake()
+        {
+            Application.targetFrameRate = 60;
+        }
+    
+        void Update()
+        {
+            float moveAmount = -10 * Time.deltaTime;
+            transform.Translate(0, moveAmount, 0);
+    
+            if (transform.position.x < min.x || transform.position.x > max.x ||
+                transform.position.y < min.y || transform.position.y > max.y)
+            {
+                Destroy(gameObject);
+            }
+        }
+    }
+    ```
+
+  </details>
+
+  <details>
+    <summary> MonsterSpawner.cs </summary>
+
+    ```csharp
+    using UnityEngine;
+    
+    public class MonsterSpawner : MonoBehaviour
+    {
+        public GameObject monsterPrefab;
+        // Start is called before the first frame update
+        void Start()
+        {
+            Invoke("Spawn", Random.Range(2f, 5f)); //"호출할 함수", 몇초후에 생성할지
+        }
+    
+        void Spawn()
+        {
+            GameObject mon = Instantiate(monsterPrefab);
+            mon.transform.position = transform.position;
+            Invoke("Spawn", Random.Range(0.3f, 10f));
+        }
+    
+        void Update()
+        {
+            OnDisable();
+            OnEnable();
+        }
+    
+        void OnDisable()
+        {
+            monsterPrefab.SetActive(false);
+        }
+        void OnEnable()
+        {
+            monsterPrefab.SetActive(true);
+        }
+    }
+    ```
+
+  </details>
+
+  <details>
+    <summary> Move.cs </summary>
+
+    ```csharp
+    using UnityEngine;
+    
+    public class Move : MonoBehaviour
+    {
+        public Transform Player;
+        public bool leftClick = false;
+        public bool rightClick = false;
+        public static float moveSpeed = 6;
+        public static float horizontalSpeed = 8;
+    
+        void Update()
+        {
+            if (leftClick)
+            {
+                Player.position += Vector3.left * horizontalSpeed * Time.deltaTime;
+            }
+            if (rightClick)
+            {
+                Player.position += Vector3.right * horizontalSpeed * Time.deltaTime;
+            }
+        }
+    
+        public void LftUp()
+        {
+            leftClick = false;
+        }
+        public void LftDown()
+        {
+            leftClick = true;
+        }
+        public void RitUp()
+        {
+            rightClick = false;
+        }
+        public void RitDown()
+        {
+            rightClick = true;
+        }
+    }
+    ```
+
+  </details>
+
+  <details>
+    <summary> Player.cs </summary>
+
+    ```csharp
+    using UnityEngine;
+    
+    public class Player : MonoBehaviour
+    {
+        public static Player Instance;
+        [SerializeField] Car[] cars;
+        [SerializeField] Car currentCar;
+        private void Awake()
+        {
+            if (Instance == null)
+                Instance = this;
+        }
+    
+        private void Start()
+        {
+            cars = GetComponentsInChildren<Car>();
+    
+            UserCar currentUserCar = User.Instance.GetCurrentUserCar();
+    
+            if (currentUserCar == null)
+            { // 기본 장비 장착 (car0)
+                currentCar = GetCar("car0");
+            }
+            else
+            { // 해당되는 장비 장착
+                currentCar = GetCar(currentUserCar.carKey);
+            }
+            for (int i = 0; i < cars.Length; i++)
+            { //일단 장비 비활성화
+                cars[i].gameObject.SetActive(false);
+            }
+            //장착해야될 장비만 활성화
+            currentCar.gameObject.SetActive(true);
+        }
+    
+        Car GetCar(string key)
+        {
+            for (int i = 0; i < cars.Length; i++)
+            {
+                if (cars[i].carData.carKey == key)
+                    return cars[i];
+            }
+            return null;
+        }
+    }
+    ```
+
+  </details>
+
+  <details>
+    <summary> Winner.cs </summary>
+
+    ```csharp
+    using UnityEngine;
+    using UnityEngine.SceneManagement;
+    
+    public class Winner : MonoBehaviour
+    {
+        public AudioClip clip;
+        public AudioClip clipBT;
+        public GameObject winWindow;
+    
+        void OnEnable()
+        {
+            SoundManager.instance.SFXPlay("ENDsound", clip);
+            User.Instance.AddGoldCoin(1); // 1회 경주 완료시 1금화 획득
+        }
+    
+        public void OnClickEnd()
+        {
+            SoundManager.instance.SFXPlay("BTsound", clipBT);
+            GameOver();
+            Time.timeScale = 1;
+        }
+    
+        public void OnClickReplay()
+        {
+            SoundManager.instance.SFXPlay("BTsound", clipBT);
+            Time.timeScale = 1;
+            winWindow.SetActive(false);
+        }
+    
+        void GameOver()
+        {
+            Collision.copperCoin = KilledScoreText.newScore;
+            if (KilledScoreText.newScore > User.Instance.bestScore)
+            {
+                int oldBestScore = User.Instance.bestScore;
+                User.Instance.bestScore = KilledScoreText.newScore;
+                Collision.newCoin = User.Instance.bestScore - oldBestScore;
+            }
+            User.Instance.AddCoin(Collision.newCoin); // 유저-코인 함수에 현재의 Score.numOfMonsterKilled 수 만큼 추가
+            User.Instance.AddCopperCoin(Collision.copperCoin);
+            
+            if (User.Instance.hp < 1)
+            {
+                User.Instance.hp = 1;
+            }
+            SceneManager.LoadScene("2_GameOverScene");
+        }
+    }
+    ```
+
+  </details>
+
+  <details>
+    <summary> MSpEable.cs </summary>
+
+    ```csharp
+    using UnityEngine;
+    
+    public class MSpEable : MonoBehaviour
+    {
+        public GameObject eableR;
+        public GameObject thisMonster1;
+        public GameObject thisMonster2;
+        public GameObject nextMonster1;
+        public GameObject nestMonster2;
+    
+        void Update()
+        {
+            if (eableR == true)
+            {
+                thisMonster1.SetActive(false);
+                thisMonster2.SetActive(false);
+                nextMonster1.SetActive(false);
+                nestMonster2.SetActive(false);
+            }
+            else
+            {
+                thisMonster1.SetActive(true);
+                thisMonster2.SetActive(true);
+                nextMonster1.SetActive(true);
+                nestMonster2.SetActive(true);
+            }
+        }
+    }
+    ```
+
+  </details>
+
+  <details>
+    <summary> Pause.cs </summary>
+
+    ```csharp
+    using UnityEngine;
+    using UnityEngine.SceneManagement;
+    
+    public class Pause : MonoBehaviour
+    {
+        public GameObject pauseButton;
+        public GameObject playButton;
+        public GameObject pauseView;
+        public GameObject pauseViewButton;
+        public AudioClip clip;
+    
+        public void OnPause()
+        {
+            SoundManager.instance.SFXPlay("ButtonS", clip);
+            pauseButton.SetActive(false);
+            playButton.SetActive(true);
+            pauseView.SetActive(true);
+            pauseViewButton.SetActive(true);
+            Time.timeScale = 0;
+        }
+    
+        public void OffPause()
+        {
+            SoundManager.instance.SFXPlay("ButtonS", clip);
+            playButton.SetActive(false);
+            pauseButton.SetActive(true);
+            pauseView.SetActive(false);
+            pauseViewButton.SetActive(false);
+            Time.timeScale = 1;
+        }
+    
+        public void PReplay()
+        {
+            playButton.SetActive(false);
+            pauseButton.SetActive(true);
+            pauseView.SetActive(false);
+            pauseViewButton.SetActive(false);
+            Time.timeScale = 1;
+            SoundManager.instance.SFXPlay("ButtonS", clip);
+        }
+    
+        public void PShop()
+        {
+            Collision.copperCoin = KilledScoreText.newScore;
+            if (KilledScoreText.newScore > User.Instance.bestScore)
+            {
+                int oldBestScore = User.Instance.bestScore;
+                User.Instance.bestScore = KilledScoreText.newScore;
+                Collision.newCoin = User.Instance.bestScore - oldBestScore;
+            }
+            User.Instance.AddCoin(Collision.newCoin);
+            User.Instance.AddCopperCoin(Collision.copperCoin);
+    
+            playButton.SetActive(false);
+            pauseButton.SetActive(true);
+            pauseView.SetActive(false);
+            pauseViewButton.SetActive(false);
+            Time.timeScale = 1;
+            SoundManager.instance.SFXPlay("ButtonS", clip);
+            SceneManager.LoadScene("3_ShopScene");
+        }
+    
+        public void PMenu()
+        {
+            Collision.copperCoin = KilledScoreText.newScore;
+            if (KilledScoreText.newScore > User.Instance.bestScore)
+            {
+                int oldBestScore = User.Instance.bestScore;
+                User.Instance.bestScore = KilledScoreText.newScore;
+                Collision.newCoin = User.Instance.bestScore - oldBestScore;
+            }
+            User.Instance.AddCoin(Collision.newCoin);
+            User.Instance.AddCopperCoin(Collision.copperCoin);
+    
+            playButton.SetActive(false);
+            pauseButton.SetActive(true);
+            pauseView.SetActive(false);
+            pauseViewButton.SetActive(false);
+            Time.timeScale = 1;
+            SoundManager.instance.SFXPlay("ButtonS", clip);
+            SceneManager.LoadScene("0_MainScene");
+        }
+    
+        public void PGameOver()
+        {
+            Collision.copperCoin = KilledScoreText.newScore;
+            if (KilledScoreText.newScore > User.Instance.bestScore)
+            {
+                int oldBestScore = User.Instance.bestScore;
+                User.Instance.bestScore = KilledScoreText.newScore;
+                Collision.newCoin = User.Instance.bestScore - oldBestScore;
+            }
+            User.Instance.AddCoin(Collision.newCoin);
+            User.Instance.AddCopperCoin(Collision.copperCoin);
+            
+            playButton.SetActive(false);
+            pauseButton.SetActive(true);
+            pauseView.SetActive(false);
+            pauseViewButton.SetActive(false);
+            Time.timeScale = 1;
+            SoundManager.instance.SFXPlay("ButtonS", clip);
+            Application.Quit();
+        }
+    }
+    ```
+
+  </details>
+
+  <details>
+    <summary> RidingScoreText.cs </summary>
+
+    ```csharp
+    using UnityEngine;
+    using TMPro;
+    
+    public class RidingScoreText : MonoBehaviour
+    {
+        TMP_Text meterScoreText;
+        public static float meterScore = 0;
+    
+        void Start()
+        {
+            meterScore = 0;
+            meterScoreText = GetComponent<TMP_Text>(); //초기화
+        }
+    
+        void Update()
+        {
+            meterScore += Time.deltaTime * 0.08f;
+            meterScoreText.text = meterScore.ToString("f2");
+        }
+    }
+    ```
+
+  </details>
+
+  <details>
+    <summary> WinOne.cs </summary>
+
+    ```csharp
+    using UnityEngine;
+    
+    public class WinOne : MonoBehaviour
+    {
+        public GameObject WinView;
+    
+        void Start()
+        {
+            Invoke("WinViews", 3f);
+        }
+    
+        private void WinViews()
+        {
+            Time.timeScale = 0;
+            WinView.SetActive(true);
+        }
+    }
+    ```
+
+  </details>
 
 
 * ### 제목
