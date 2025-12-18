@@ -1,12 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Monster : MonoBehaviour
 {
     private Vector2 min = new Vector2(-8f, -10f);
     private Vector2 max = new Vector2(8f, 30f);
-
 
     void Awake()
     {

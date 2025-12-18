@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class EndLine : MonoBehaviour
 {
@@ -25,10 +23,5 @@ public class EndLine : MonoBehaviour
     void ObjectEnd()
     {
         roadEnd.SetActive(false);
-    }
-
-    void Update()
-    {
-
     }
 }

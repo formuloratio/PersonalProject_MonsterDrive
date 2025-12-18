@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class MSpEable : MonoBehaviour
 {
@@ -9,13 +7,7 @@ public class MSpEable : MonoBehaviour
     public GameObject thisMonster2;
     public GameObject nextMonster1;
     public GameObject nestMonster2;
-    // Start is called before the first frame update
-    void Start()
-    {
-    
-    }
 
-    // Update is called once per frame
     void Update()
     {
         if (eableR == true)

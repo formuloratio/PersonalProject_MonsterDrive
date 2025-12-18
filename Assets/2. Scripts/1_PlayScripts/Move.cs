@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using JetBrains.Annotations;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Move : MonoBehaviour
 {
@@ -10,7 +7,6 @@ public class Move : MonoBehaviour
     public bool rightClick = false;
     public static float moveSpeed = 6;
     public static float horizontalSpeed = 8;
-
 
     void Update()
     {
@@ -22,9 +18,8 @@ public class Move : MonoBehaviour
         {
             Player.position += Vector3.right * horizontalSpeed * Time.deltaTime;
         }
-            
-
     }
+
     public void LftUp()
     {
         leftClick = false;

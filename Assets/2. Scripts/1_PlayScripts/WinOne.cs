@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class WinOne : MonoBehaviour
 {
     public GameObject WinView;
-    // Start is called before the first frame update
+
     void Start()
     {
         Invoke("WinViews", 3f);
@@ -15,11 +13,5 @@ public class WinOne : MonoBehaviour
     {
         Time.timeScale = 0;
         WinView.SetActive(true);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

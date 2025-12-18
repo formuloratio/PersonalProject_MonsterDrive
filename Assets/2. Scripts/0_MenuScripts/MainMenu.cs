@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement; //씬 바꿀 때 필요
 
@@ -9,18 +8,6 @@ public class MainMenu : MonoBehaviour
     public GameObject settingUI;
     public GameObject menuUI;
     public GameObject ruleUI;
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-        
-    }
 
     public void OnClickNewGame()
     {
@@ -113,8 +100,6 @@ public class MainMenu : MonoBehaviour
 
         Debug.Log("User 데이터 저장 완료!");
     }
-
-
 
     public void OnClickLoad()
     {

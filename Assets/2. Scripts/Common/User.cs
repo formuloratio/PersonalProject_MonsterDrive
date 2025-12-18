@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class User : MonoBehaviour
@@ -140,9 +139,6 @@ public class User : MonoBehaviour
 
         Debug.Log("User 데이터 불러오기 완료!");
     }
-
-    
-
 }
 
 [System.Serializable]

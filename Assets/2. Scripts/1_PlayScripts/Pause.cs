@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Xml.Serialization;
-using Unity.VisualScripting;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class Pause : MonoBehaviour
@@ -12,17 +8,6 @@ public class Pause : MonoBehaviour
     public GameObject pauseView;
     public GameObject pauseViewButton;
     public AudioClip clip;
-
-
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-
-    }
 
     public void OnPause()
     {
@@ -53,6 +38,7 @@ public class Pause : MonoBehaviour
         Time.timeScale = 1;
         SoundManager.instance.SFXPlay("ButtonS", clip);
     }
+
     public void PShop()
     {
         Collision.copperCoin = KilledScoreText.newScore;
@@ -73,6 +59,7 @@ public class Pause : MonoBehaviour
         SoundManager.instance.SFXPlay("ButtonS", clip);
         SceneManager.LoadScene("3_ShopScene");
     }
+
     public void PMenu()
     {
         Collision.copperCoin = KilledScoreText.newScore;
@@ -93,6 +80,7 @@ public class Pause : MonoBehaviour
         SoundManager.instance.SFXPlay("ButtonS", clip);
         SceneManager.LoadScene("0_MainScene");
     }
+
     public void PGameOver()
     {
         Collision.copperCoin = KilledScoreText.newScore;

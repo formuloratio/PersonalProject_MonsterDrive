@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using JetBrains.Annotations;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
@@ -9,7 +6,6 @@ public class CarProductsFirst : MonoBehaviour
 {
     public GameObject carNone1Scroll;
     public GameObject carNone2Image;
-
 
     public CarData carData;
     public Image thumImage;
@@ -76,8 +72,6 @@ public class CarProductsFirst : MonoBehaviour
             SoundManager.instance.SFXPlay("sound", nonePurchaseClip);
         }
 
-
         GetComponentInParent<CarShopCanvas>().UpdateCanvas();
     }
-
 }

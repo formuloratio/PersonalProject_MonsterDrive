@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using JetBrains.Annotations;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
@@ -24,7 +21,6 @@ public class CarProducts : MonoBehaviour
 
     private void Start()
     {
-        //        thumImage.sprite = carData.thum;
         priceText.text = carData.price.ToString();
 
 
@@ -104,5 +100,4 @@ public class CarProducts : MonoBehaviour
         User.Instance.EquipCar(carData.carKey);
         GetComponentInParent<CarShopCanvas>().UpdateCanvas();
     }
-
 }

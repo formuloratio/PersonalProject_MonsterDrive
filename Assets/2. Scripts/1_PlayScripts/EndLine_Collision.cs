@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEngine;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine;
 
 public class EndLine_Collision : MonoBehaviour
 {
@@ -27,17 +23,7 @@ public class EndLine_Collision : MonoBehaviour
     public GameObject thisMonster8;
     public GameObject nextMonster1;
     public GameObject nestMonster2;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
     void OnEnable()
     {
         thisMonster1.SetActive(false);
@@ -88,5 +74,4 @@ public class EndLine_Collision : MonoBehaviour
         thisSound.SetActive(false);
         thisDgMonsterInf.SetActive(false);
     }
-    
 }

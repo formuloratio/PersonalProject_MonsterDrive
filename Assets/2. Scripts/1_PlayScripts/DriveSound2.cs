@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class DriveSound2 : MonoBehaviour
 {
@@ -12,5 +10,4 @@ public class DriveSound2 : MonoBehaviour
         bgSound2.volume = 0.5f;
         bgSound2.Play();
     }
-    
 }

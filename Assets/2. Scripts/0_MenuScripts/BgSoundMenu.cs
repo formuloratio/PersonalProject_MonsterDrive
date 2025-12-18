@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class BgSoundMenu : MonoBehaviour
 {
@@ -12,5 +10,4 @@ public class BgSoundMenu : MonoBehaviour
         bgSound.volume = 0.3f;
         bgSound.Play();
     }
-
 }

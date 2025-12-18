@@ -1,24 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
-using GoogleMobileAds;
-using GoogleMobileAds.Api;
-using System;
 
 public class Replay : MonoBehaviour
 {
     public AudioClip clip;
-    // private AdmobManager admobManager;
-
-    void Start()
-    {
-        // admobManager = FindObjectOfType<AdmobManager>();
-        // if (admobManager == null)
-        // {
-        //     Debug.LogError("AdmobManager not found in the scene.");
-        // }
-    }
 
     public void ReplayGame()
     {

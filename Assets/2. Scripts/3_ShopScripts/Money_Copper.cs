@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 
 public class Money_Copper : MonoBehaviour
@@ -15,6 +13,5 @@ public class Money_Copper : MonoBehaviour
     void Update()
     {
         copperCoinText.text = User.Instance.copperCoin.ToString();
-
     }
 }

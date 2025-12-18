@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
-using System.Xml.Serialization;
 
 public class Money : MonoBehaviour
 {
@@ -16,8 +13,5 @@ public class Money : MonoBehaviour
     void Update()
     {
         coinText.text = User.Instance.coin.ToString();
-        //coinText.text = Score.savedMoney.ToString();
-
     }
-
 }

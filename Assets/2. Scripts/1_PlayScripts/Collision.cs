@@ -1,20 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class Collision : MonoBehaviour
 {
-
     public AudioClip clip;
     public static int newCoin = 0;
     public static int copperCoin = 0;
-
-    void Start()
-    {
-
-    }
 
     void GameOver()
     {
@@ -52,7 +44,6 @@ public class Collision : MonoBehaviour
         }
     }
 
-
     private IEnumerator DestroyAnimation()
     {
         SoundManager.instance.SFXPlay("Boom_End", clip); // 사운드 넣기 코드 02
@@ -60,10 +51,5 @@ public class Collision : MonoBehaviour
         yield return new WaitForSecondsRealtime(0.3f); //시간 멈춘 후에도 동작
         GameOver();
         Time.timeScale = 1f;
-
-    }
-    void Update()
-    {
-
     }
 }

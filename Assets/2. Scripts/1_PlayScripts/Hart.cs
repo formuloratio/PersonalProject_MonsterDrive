@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 
 public class Hart : MonoBehaviour
@@ -15,6 +13,5 @@ public class Hart : MonoBehaviour
     void Update()
     {
         hartText.text = User.Instance.hp.ToString();
-        //coinText.text = Score.savedMoney.ToString();
     }
 }

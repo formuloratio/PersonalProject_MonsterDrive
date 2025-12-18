@@ -1,15 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using JetBrains.Annotations;
-using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
+﻿using UnityEngine;
 
 public class LackWindow : MonoBehaviour
 {
     public CarData carData;
     private Animator animator;
-
 
     private void Awake()
     {
@@ -27,9 +21,7 @@ public class LackWindow : MonoBehaviour
         {
             gameObject.SetActive(false);
         }
-
     }
-
 
     public void ButtonClose()
     {

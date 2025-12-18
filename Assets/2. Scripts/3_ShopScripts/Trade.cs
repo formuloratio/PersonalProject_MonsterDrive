@@ -1,22 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Trade : MonoBehaviour
 {
     public AudioClip purchaseClip;
     public AudioClip nonePurchaseClip;
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 
     public void GoldPurchase()
     {
@@ -31,6 +18,7 @@ public class Trade : MonoBehaviour
             SoundManager.instance.SFXPlay("sound", nonePurchaseClip);
         }
     }
+
     public void GoldToSilverPurchase()
     {
         if (User.Instance.goldCoin >= 1)
@@ -43,8 +31,8 @@ public class Trade : MonoBehaviour
         {
             SoundManager.instance.SFXPlay("sound", nonePurchaseClip);
         }
-
     }
+
     public void CopperToSilverPurchase()
     {
         if (User.Instance.copperCoin >= 120)
@@ -57,8 +45,8 @@ public class Trade : MonoBehaviour
         {
             SoundManager.instance.SFXPlay("sound", nonePurchaseClip);
         }
-        
     }
+
     public void CopperPurchase()
     {
         if (User.Instance.coin >= 1)
