@@ -7,9 +7,8 @@
 1. [프로젝트 장르 및 소개](#프로젝트-장르-및-소개)
 2. [주요기능](#주요기능)
 3. [구현내용 및 스크립트](#구현내용-및-스크립트)
-4. [트러블슈팅](#트러블슈팅)
-5. [기술스택](#기술스택)
-6. [사용에셋 목록](#사용에셋-목록)
+4. [기술스택](#기술스택)
+5. [사용에셋 목록](#사용에셋-목록)
 
 ---
 
@@ -26,7 +25,7 @@
   <tr><td> 개발 기간 </td><td> 총 59일 { 2025.08.20 ~ 2025.10.17 } </td></tr>
 </table>
 
-* 유니티 게임 개발 및 출시에 관한 학습 목적으로 한 생애 첫 개인 개발 프로젝트. 
+* 유니티 게임 개발 및 출시에 관한 학습 목적으로 한, 생애 첫 개인 개발 프로젝트.
 
 ---
 
@@ -1381,61 +1380,633 @@
   </details>
 
 
-* ### 제목
+* ### 상점 씬
 
   <details>
-    <summary> .cs </summary>
+    <summary> BgSoundShop.cs </summary>
 
-
+    ```csharp
+    using UnityEngine;
+    
+    public class BgSoundShop : MonoBehaviour
+    {
+        public AudioSource bgSound;
+    
+        void Start()
+        {
+            bgSound.loop = true;
+            bgSound.volume = 0.33f;
+            bgSound.Play();
+        }
+    }
+    ```
 
   </details>
 
   <details>
-    <summary> .cs </summary>
+    <summary> ButtonSound.cs </summary>
 
-
-
-  </details>
-
-
-* ### 제목
-
-  <details>
-    <summary> .cs </summary>
-
-
-
-  </details>
-
-  <details>
-    <summary> .cs </summary>
-
-
-
-  </details>
-
-
-* ### 제목
-
-  <details>
-    <summary> .cs </summary>
-
-
+    ```csharp
+    using UnityEngine;
+    
+    public class ButtonSound : MonoBehaviour
+    {
+        public AudioClip clip;
+    
+        public void BtSound()
+        {
+            SoundManager.instance.SFXPlay("sound", clip);
+        }
+    }
+    ```
 
   </details>
 
   <details>
-    <summary> .cs </summary>
+    <summary> BuyWindow2.cs </summary>
 
-
+    ```csharp
+    using UnityEngine;
+    using TMPro;
+    
+    public class BuyWindow2 : MonoBehaviour
+    {
+        private Animator animator;
+        public TMP_Text priceText;
+        public int price = 10;
+    
+        private void Awake()
+        {
+            animator = GetComponent<Animator>();
+        }
+    
+        public void ButtonClose()
+        {
+            if (User.Instance.coin >= price)
+            {
+                User.Instance.coin = User.Instance.coin - price;
+                animator.SetTrigger("close");
+                gameObject.SetActive(false);
+                animator.ResetTrigger("close");
+            }
+        }
+    }
+    ```
 
   </details>
 
----
+  <details>
+    <summary> CarProducts.cs </summary>
 
-## 트러블슈팅
+    ```csharp
+    using UnityEngine;
+    using UnityEngine.UI;
+    using TMPro;
+    
+    public class CarProducts : MonoBehaviour
+    {
+        public CarData carData;
+        public Image thumImage;
+        public TMP_Text priceText;
+        public Image stateIM;
+        public Image stateBT;
+    
+        public GameObject purchaseButton;
+        public GameObject equipButton;
+        public TMP_Text equipStateText;
+        
+        public AudioClip clipP;
+        public AudioClip clipE;
+    
+        public AudioClip nonePurchaseClip;
+    
+        private void Start()
+        {
+            priceText.text = carData.price.ToString();
+    
+            UserCar userCar = User.Instance.GetUserCar(carData.carKey);
+            if (userCar.isOwn == true) // 소유하면 흰색으로 비소유면 회색
+            {
+                stateIM.GetComponent<Image>().color = new Color(255 / 255f, 255 / 255f, 255 / 255f);
+                stateBT.GetComponent<Image>().color = new Color(255 / 255f, 255 / 255f, 255 / 255f);
+            }
+            else
+            {
+                stateIM.GetComponent<Image>().color = new Color(155 / 255f, 155 / 255f, 155 / 255f);
+                stateBT.GetComponent<Image>().color = new Color(155 / 255f, 155 / 255f, 155 / 255f);
+            }
+    
+            UpdatePanel(); //다른 씬에서 돌아왔을 때 UI 갱신
+    
+        }
+    
+        public void UpdatePanel() // 이 함수 호출 시 CarProductPanel UI 갱신
+        {
+            UserCar userCar = User.Instance.GetUserCar(carData.carKey); //패널에 보여지는 차 구매했는지 장착중인지 알기 위해 현재 패널에서 보여지고 있는 무기에 대한 유저카 객체를 반환 받음
+    
+            if (userCar != null && userCar.isOwn) // 구매한 무기인지 판별
+            {
+                equipButton.SetActive(true);
+                if (userCar.isEquipping) // 탑승하고 있으면 탑승중 출력
+                {
+                    equipStateText.text = "on board";
+                }
+                else // 탑승 안하고 있으면 탑승하기 출력
+                {
+                    equipStateText.text = "get in";
+                }
+            }
+            else
+            {
+                equipButton.SetActive(false);
+            }
+        }
+    
+        public void OnClickedPurchase()
+        {
+            if (User.Instance.coin >= carData.price)
+            {
+                SoundManager.instance.SFXPlay("buyS", clipP);
+                User.Instance.coin = User.Instance.coin - carData.price;
+                User.Instance.PurchasedCar(carData.carKey);
+    
+                UserCar userCar = User.Instance.GetUserCar(carData.carKey);
+                if (userCar.isOwn == true) // 소유하면 흰색으로 비소유면 회색
+                {
+                    stateIM.GetComponent<Image>().color = new Color(255 / 255f, 255 / 255f, 255 / 255f);
+                    stateBT.GetComponent<Image>().color = new Color(255 / 255f, 255 / 255f, 255 / 255f);
+                }
+                else
+                {
+                    stateIM.GetComponent<Image>().color = new Color(155 / 255f, 155 / 255f, 155 / 255f);
+                    stateBT.GetComponent<Image>().color = new Color(155 / 255f, 155 / 255f, 155 / 255f);
+                }
+    
+                purchaseButton.SetActive(false);
+            }
+            else
+            {
+                SoundManager.instance.SFXPlay("sound", nonePurchaseClip);
+            }
+    
+            //UpdatePanel();
+    
+            GetComponentInParent<CarShopCanvas>().UpdateCanvas();
+        }
+    
+        public void OnClickedEquip()
+        {
+            SoundManager.instance.SFXPlay("equipS", clipE);
+            User.Instance.EquipCar(carData.carKey);
+            GetComponentInParent<CarShopCanvas>().UpdateCanvas();
+        }
+    }
+    ```
 
+  </details>
 
+  <details>
+    <summary> CarProductsFirst.cs </summary>
+
+    ```csharp
+    using UnityEngine;
+    using UnityEngine.UI;
+    using TMPro;
+    
+    public class CarProductsFirst : MonoBehaviour
+    {
+        public GameObject carNone1Scroll;
+        public GameObject carNone2Image;
+    
+        public CarData carData;
+        public Image thumImage;
+        public TMP_Text priceText;
+        public Image stateIM;
+        public Image stateBT;
+    
+        public GameObject purchaseButton;
+        public GameObject equipButton;
+        public TMP_Text equipStateText;
+        
+        public AudioClip clipP;
+        public AudioClip clipE;
+    
+        public AudioClip nonePurchaseClip;
+    
+        private void Start()
+        {
+            UpdatePanel(); //다른 씬에서 돌아왔을 때 UI 갱신
+        }
+    
+        public void UpdatePanel() // 이 함수 호출 시 CarProductPanel UI 갱신
+        {
+            UserCar userCar = User.Instance.GetUserCar(carData.carKey); //패널에 보여지는 차 구매했는지 장착중인지 알기 위해 현재 패널에서 보여지고 있는 무기에 대한 유저카 객체를 반환 받음
+    
+            if (userCar != null && userCar.isOwn) // 구매한 무기인지 판별
+            {
+                carNone1Scroll.GetComponent<ScrollRect>().enabled = true;
+                carNone2Image.SetActive(false);
+            }
+        }
+    
+        public void OnClickedPurchase()
+        {
+            if (User.Instance.goldCoin >= carData.price)
+            {
+                User.Instance.maxHp += 10;
+                User.Instance.hp += 10;
+    
+                carNone1Scroll.GetComponent<ScrollRect>().enabled = true; //carNone1 오브젝트에 있는 스크롤 기능 활성화
+                carNone2Image.SetActive(false);
+                GetComponentInParent<CarShopCanvas>().UpdateCanvas();
+    
+                SoundManager.instance.SFXPlay("buyS", clipP);
+                User.Instance.goldCoin = User.Instance.goldCoin - carData.price;
+                User.Instance.PurchasedCar(carData.carKey);
+    
+                UserCar userCar = User.Instance.GetUserCar(carData.carKey);
+                if (userCar.isOwn == true) // 소유하면 흰색으로 비소유면 회색
+                {
+                    stateIM.GetComponent<Image>().color = new Color(255 / 255f, 255 / 255f, 255 / 255f);
+                    stateBT.GetComponent<Image>().color = new Color(255 / 255f, 255 / 255f, 255 / 255f);
+                }
+                else
+                {
+                    stateIM.GetComponent<Image>().color = new Color(155 / 255f, 155 / 255f, 155 / 255f);
+                    stateBT.GetComponent<Image>().color = new Color(155 / 255f, 155 / 255f, 155 / 255f);
+                }
+    
+                purchaseButton.SetActive(false);
+            }
+            else
+            {
+                SoundManager.instance.SFXPlay("sound", nonePurchaseClip);
+            }
+    
+            GetComponentInParent<CarShopCanvas>().UpdateCanvas();
+        }
+    }
+    
+    ```
+
+  </details>
+
+  <details>
+    <summary> CarShopCanvas.cs </summary>
+
+    ```csharp
+    using UnityEngine;
+    
+    public class CarShopCanvas : MonoBehaviour
+    {
+        public CarProducts[] carProducts;
+    
+        void Start()
+        {
+            carProducts = GetComponentsInChildren<CarProducts>();
+        }
+    
+        public void UpdateCanvas() //호출 시 canvas 하위의 ui 갱신
+        {
+            for (int i = 0; i < carProducts.Length; i++)
+            {
+                carProducts[i].UpdatePanel();
+            }
+        }
+    }
+    ```
+
+  </details>
+
+  <details>
+    <summary> HPBuy.cs </summary>
+
+    ```csharp
+    using UnityEngine;
+    using TMPro;
+    using UnityEngine.UI;
+    
+    public class HPBuy : MonoBehaviour
+    {
+        public Button hpPriceButton;
+        public TMP_Text hpText;
+        public AudioClip clipP;
+        public AudioClip nonePurchaseClip;
+    
+        void Start()
+        {
+            hpText = GetComponentInChildren<TMP_Text>();
+        }
+    
+        void Update()
+        {
+            hpText.text = User.Instance.hp.ToString();
+        }
+    
+        public void OnClickPurchaseHP()
+        {
+            if (User.Instance.copperCoin >= 50 && User.Instance.hp < User.Instance.maxHp)
+            {
+                SoundManager.instance.SFXPlay("buyS", clipP);
+                User.Instance.AddCopperCoin(-50);
+                User.Instance.AddHp(1);
+            }
+            else
+            {
+                SoundManager.instance.SFXPlay("sound", nonePurchaseClip);
+            }
+        }
+    }
+    ```
+
+  </details>
+
+  <details>
+    <summary> LackWindow.cs </summary>
+
+    ```csharp
+    using UnityEngine;
+    
+    public class LackWindow : MonoBehaviour
+    {
+        public CarData carData;
+        private Animator animator;
+    
+        private void Awake()
+        {
+            GetComponentInParent<CarShopCanvas>().UpdateCanvas();
+            animator = GetComponent<Animator>();
+        }
+    
+        public void Start()
+        {
+            if (User.Instance.coin < carData.price)
+            {
+                gameObject.SetActive(true);
+            }
+            else
+            {
+                gameObject.SetActive(false);
+            }
+        }
+    
+        public void ButtonClose()
+        {
+            animator.SetTrigger("close");
+            gameObject.SetActive(false);
+            animator.ResetTrigger("close");
+        }
+    }
+    ```
+
+  </details>
+
+  <details>
+    <summary> Money.cs </summary>
+
+    ```csharp
+    using UnityEngine;
+    using TMPro;
+    
+    public class Money : MonoBehaviour
+    {
+        public TMP_Text coinText;
+    
+        void Start()
+        {
+            coinText = GetComponentInChildren<TMP_Text>();
+        }
+    
+        void Update()
+        {
+            coinText.text = User.Instance.coin.ToString();
+        }
+    }
+    ```
+
+  </details>
+
+  <details>
+    <summary> Money_Copper.cs </summary>
+
+    ```csharp
+    using UnityEngine;
+    using TMPro;
+    
+    public class Money_Copper : MonoBehaviour
+    {
+        public TMP_Text copperCoinText;
+    
+        void Start()
+        {
+            copperCoinText = GetComponentInChildren<TMP_Text>();
+        }
+    
+        void Update()
+        {
+            copperCoinText.text = User.Instance.copperCoin.ToString();
+        }
+    }
+    ```
+
+  </details>
+
+  <details>
+    <summary> Money_Gold.cs </summary>
+
+    ```csharp
+    using UnityEngine;
+    using TMPro;
+    
+    public class Money_Gold : MonoBehaviour
+    {
+        public TMP_Text goldCoinText;
+    
+        void Start()
+        {
+            goldCoinText = GetComponentInChildren<TMP_Text>();
+        }
+    
+        void Update()
+        {
+            goldCoinText.text = User.Instance.goldCoin.ToString();
+        }
+    }
+    ```
+
+  </details>
+
+  <details>
+    <summary> StateEquip.cs </summary>
+
+    ```csharp
+    using UnityEngine;
+    using UnityEngine.UI;
+    
+    public class StateEquip : MonoBehaviour
+    {
+        public string carKey;
+    
+        void Update()
+        {
+            UserCar userCar = User.Instance.GetUserCar(carKey);
+            if (userCar.isEquipping == true) // 장착하면 회색으로 비장착시 흰색으로
+            {
+                GetComponent<Image>().color = new Color(150 / 255f, 150 / 255f, 150 / 255f);
+            }
+            else
+            {
+                GetComponent<Image>().color = new Color(255 / 255f, 255 / 255f, 255 / 255f);
+            }
+        }
+    }
+    ```
+
+  </details>
+
+  <details>
+    <summary> TabButton.cs </summary>
+
+    ```csharp
+    using UnityEngine;
+    using UnityEngine.UI;
+    
+    public class TabButton : MonoBehaviour
+    {
+        Image background;
+        public Sprite defaultImg;
+        public Sprite selectedImg;
+    
+        private void Awake()
+        {
+            background = GetComponent<Image>();
+        }
+    
+        public void Selected()
+        {
+            background.sprite = selectedImg;
+        }
+    
+        public void DeSelected()
+        {
+            background.sprite = defaultImg;
+        }
+    }//버튼 누르고 떼기에 따른 이미지 변경
+    ```
+
+  </details>
+
+  <details>
+    <summary> TabPanel.cs </summary>
+
+    ```csharp
+    using System.Collections.Generic;
+    using UnityEngine;
+    
+    public class TabPanel : MonoBehaviour
+    {
+        public AudioClip clip;
+        public List<TabButton> tabButtons;
+        public List<GameObject> contentsPanels;
+        int selected = 0;
+    
+        private void Start()
+        {
+            ClickTab(selected);
+            SoundManager.instance.SFXPlay("sound", clip);
+        }
+    
+        public void ClickTab(int id)
+        {
+            for (int i = 0; i < contentsPanels.Count; i++)
+            {
+                if (i == id)
+                {
+                    contentsPanels[i].SetActive(true);
+                    tabButtons[i].Selected();
+                }
+                else
+                {
+                    contentsPanels[i].SetActive(false);
+                    tabButtons[i].DeSelected();
+                }
+            }
+        }
+    }//패널 선택(버튼 클릭)에 따라 패널 보여주기
+    ```
+
+  </details>
+
+  <details>
+    <summary> Trade.cs </summary>
+
+    ```csharp
+    using UnityEngine;
+    
+    public class Trade : MonoBehaviour
+    {
+        public AudioClip purchaseClip;
+        public AudioClip nonePurchaseClip;
+    
+        public void GoldPurchase()
+        {
+            if (User.Instance.coin >= 120)
+            {
+                SoundManager.instance.SFXPlay("sound", purchaseClip);
+                User.Instance.goldCoin += 1;
+                User.Instance.coin -= 120;
+            }
+            else
+            {
+                SoundManager.instance.SFXPlay("sound", nonePurchaseClip);
+            }
+        }
+    
+        public void GoldToSilverPurchase()
+        {
+            if (User.Instance.goldCoin >= 1)
+            {
+                SoundManager.instance.SFXPlay("sound", purchaseClip);
+                User.Instance.goldCoin -= 1;
+                User.Instance.coin += 80;
+            }
+            else
+            {
+                SoundManager.instance.SFXPlay("sound", nonePurchaseClip);
+            }
+        }
+    
+        public void CopperToSilverPurchase()
+        {
+            if (User.Instance.copperCoin >= 120)
+            {
+                SoundManager.instance.SFXPlay("sound", purchaseClip);
+                User.Instance.coin += 1;
+                User.Instance.copperCoin -= 120;
+            }
+            else
+            {
+                SoundManager.instance.SFXPlay("sound", nonePurchaseClip);
+            }
+        }
+    
+        public void CopperPurchase()
+        {
+            if (User.Instance.coin >= 1)
+            {
+                SoundManager.instance.SFXPlay("sound", purchaseClip);
+                User.Instance.coin -= 1;
+                User.Instance.copperCoin += 80;
+            }
+            else
+            {
+                SoundManager.instance.SFXPlay("sound", nonePurchaseClip);
+            }
+        }
+    }
+    ```
+
+  </details>
 
 ---
 
