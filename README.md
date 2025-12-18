@@ -43,6 +43,7 @@
 ---
 
 ## 구현내용
+<img width="2648" height="1235" alt="UML_N" src="https://github.com/user-attachments/assets/4992e2be-4234-4763-ac59-d72b65510b7f" />
 
 
 ### 스크립트
