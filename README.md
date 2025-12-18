@@ -42,7 +42,7 @@
 
 ---
 
-## 구현내용
+## 구현내용 및 스크립트
 <img width="2648" height="1235" alt="UML_N" src="https://github.com/user-attachments/assets/4992e2be-4234-4763-ac59-d72b65510b7f" />
 
 
