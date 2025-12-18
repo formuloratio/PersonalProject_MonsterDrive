@@ -6,7 +6,7 @@
 ## 📑 목차
 1. [프로젝트 장르 및 소개](#프로젝트-장르-및-소개)
 2. [주요기능](#주요기능)
-3. [구현내용](#구현내용)
+3. [구현내용 및 스크립트](#구현내용-및-스크립트)
 4. [트러블슈팅](#트러블슈팅)
 5. [기술스택](#기술스택)
 6. [사용에셋 목록](#사용에셋-목록)
@@ -14,7 +14,7 @@
 ---
 
 
-## 👨‍🏫 프로젝트 장르 및 소개
+## 프로젝트 장르 및 소개
 
 <table>
   <tr>
@@ -30,7 +30,7 @@
 
 ---
 
-## 🔧 주요기능
+## 주요기능
 ### 게임플레이
 - 각 스테이지 별로 정해진 몬스터를 피하면서 총 5단계를 살아남으면 게임 클리어.
 - 스테이지마다 회피해야 하는 몬스터와 충돌하면 HP가 깎이고, 그 외의 몬스터와 충돌하면 코인을 획득.
@@ -43,19 +43,478 @@
 
 ---
 
-## 🖥️ 구현내용
+## 구현내용
+
+
+### 스크립트
+---
+
+* ### 메인 메뉴
+
+  <details>
+    <summary> MainMenu.cs </summary>
+
+    ```csharp
+    using System.Collections.Generic;
+    using UnityEngine;
+    using UnityEngine.SceneManagement; //씬 바꿀 때 필요
+    
+    public class MainMenu : MonoBehaviour
+    {
+        public AudioClip clip;
+        public GameObject settingUI;
+        public GameObject menuUI;
+        public GameObject ruleUI;
+    
+        public void OnClickNewGame()
+        {
+            SoundManager.instance.SFXPlay("ButtonS", clip);
+            Debug.Log("새로하기");
+            SceneManager.LoadScene("1_PlayScene"); //""안에 씬 이름 넣으면 로드 됨
+    
+            SoundManager.instance.SFXPlay("ButtonS", clip);
+            ES3.Save<int>("bestScore", User.Instance.bestScore);
+            ES3.Save<int>("hp", User.Instance.hp);
+            ES3.Save<int>("maxHp", User.Instance.maxHp);
+            ES3.Save<int>("coin", User.Instance.coin);
+            ES3.Save<int>("goldCoin", User.Instance.goldCoin);
+            ES3.Save<int>("copperCoin", User.Instance.copperCoin);
+    
+            // 자동차 리스트 저장
+            ES3.Save<List<UserCar>>("userCars", User.Instance.userCars);
+    
+            Debug.Log("User 데이터 저장 완료!");
+        }
+    
+        public void OnClickShop()
+        {
+            SoundManager.instance.SFXPlay("ButtonS", clip);
+            Debug.Log("상점");
+            SceneManager.LoadScene("3_ShopScene");
+    
+            SoundManager.instance.SFXPlay("ButtonS", clip);
+            ES3.Save<int>("bestScore", User.Instance.bestScore);
+            ES3.Save<int>("hp", User.Instance.hp);
+            ES3.Save<int>("maxHp", User.Instance.maxHp);
+            ES3.Save<int>("coin", User.Instance.coin);
+            ES3.Save<int>("goldCoin", User.Instance.goldCoin);
+            ES3.Save<int>("copperCoin", User.Instance.copperCoin);
+    
+            // 자동차 리스트 저장
+            ES3.Save<List<UserCar>>("userCars", User.Instance.userCars);
+    
+            Debug.Log("User 데이터 저장 완료!");
+        }
+    
+        public void OnClickRule()
+        {
+            SoundManager.instance.SFXPlay("ButtonS", clip);
+            ruleUI.SetActive(true);
+        }
+    
+        public void OnClickOption()
+        {
+            SoundManager.instance.SFXPlay("ButtonS", clip);
+            Debug.Log("옵션");
+            settingUI.SetActive(true);
+    
+            SoundManager.instance.SFXPlay("ButtonS", clip);
+            ES3.Save<int>("bestScore", User.Instance.bestScore);
+            ES3.Save<int>("hp", User.Instance.hp);
+            ES3.Save<int>("maxHp", User.Instance.maxHp);
+            ES3.Save<int>("coin", User.Instance.coin);
+            ES3.Save<int>("goldCoin", User.Instance.goldCoin);
+            ES3.Save<int>("copperCoin", User.Instance.copperCoin);
+    
+            // 자동차 리스트 저장
+            ES3.Save<List<UserCar>>("userCars", User.Instance.userCars);
+    
+            Debug.Log("User 데이터 저장 완료!");
+        }
+    
+        public void OnClickRanking()
+        {
+            SoundManager.instance.SFXPlay("ButtonS", clip);
+            Debug.Log("랭킹");
+        }
+    
+        public void OnClickMenu()
+        {
+            SoundManager.instance.SFXPlay("ButtonS", clip);
+            Debug.Log("메뉴");
+            menuUI.SetActive(true);
+    
+            SoundManager.instance.SFXPlay("ButtonS", clip);
+            ES3.Save<int>("bestScore", User.Instance.bestScore);
+            ES3.Save<int>("hp", User.Instance.hp);
+            ES3.Save<int>("maxHp", User.Instance.maxHp);
+            ES3.Save<int>("coin", User.Instance.coin);
+            ES3.Save<int>("goldCoin", User.Instance.goldCoin);
+            ES3.Save<int>("copperCoin", User.Instance.copperCoin);
+    
+            // 자동차 리스트 저장
+            ES3.Save<List<UserCar>>("userCars", User.Instance.userCars);
+    
+            Debug.Log("User 데이터 저장 완료!");
+        }
+    
+        public void OnClickLoad()
+        {
+            SoundManager.instance.SFXPlay("ButtonS", clip);
+            Debug.Log("불러오기");
+        }
+    
+        public void OnClickQuit()
+        {
+            SoundManager.instance.SFXPlay("ButtonS", clip);
+            ES3.Save<int>("bestScore", User.Instance.bestScore);
+            ES3.Save<int>("hp", User.Instance.hp);
+            ES3.Save<int>("maxHp", User.Instance.maxHp);
+            ES3.Save<int>("coin", User.Instance.coin);
+            ES3.Save<int>("goldCoin", User.Instance.goldCoin);
+            ES3.Save<int>("copperCoin", User.Instance.copperCoin);
+    
+            // 자동차 리스트 저장
+            ES3.Save<List<UserCar>>("userCars", User.Instance.userCars);
+    
+            Debug.Log("User 데이터 저장 완료!");
+    //#if UNITY_EDITOR
+    //        UnityEditor.EditorApplication.isPlaying = false;
+    //#else
+            Application.Quit(); //유니티에선 실행안됨. 그래서 추가 코드 필요.
+    //#endif
+        }
+        
+    }
+    
+    ```
+
+  </details>
+
+  <details>
+    <summary> Close.cs </summary>
+
+    ```csharp
+    using UnityEngine;
+    
+    public class Close : MonoBehaviour
+    {
+        public AudioClip clip;
+    
+        public void OnClose()
+        {
+            SoundManager.instance.SFXPlay("CloseS", clip);
+            gameObject.SetActive(false);
+        }
+    }
+    ```
+
+  </details>
+
+
+* ### 사운드
+
+  <details>
+    <summary> SoundManager.cs </summary>
+
+    ```csharp
+    using UnityEngine;
+    
+    public class SoundManager : MonoBehaviour
+    {
+        public AudioClip[] bglist;
+        public static SoundManager instance;
+    
+        private void Awake()
+        {
+            if (instance == null)
+            {
+                instance = this;
+                DontDestroyOnLoad(instance);
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+        }
+    
+        public void SFXPlay(string sfxName, AudioClip clip)
+        {
+            GameObject go = new GameObject(sfxName + "Sound");
+            AudioSource audiosource = go.AddComponent<AudioSource>();
+            audiosource.clip = clip; //여기까지 설정 끝남
+            audiosource.Play(); //오디오 플레이 함수 호출
+    
+            Destroy(go, clip.length); //효과음 재생 끝나면 오브젝트 파괴
+        }
+    }
+    
+    ```
+
+  </details>
+
+  <details>
+    <summary> BgSoundMenu.cs </summary>
+
+    ```csharp
+    using UnityEngine;
+    
+    public class BgSoundMenu : MonoBehaviour
+    {
+        public AudioSource bgSound;
+        
+        void Start()
+        {
+            bgSound.loop = true;
+            bgSound.volume = 0.3f;
+            bgSound.Play();
+        }
+    }
+    ```
+
+  </details>
+
+
+
+* ### 해상도 조절
+
+  <details>
+    <summary> AspectRatio.cs </summary>
+
+    ```csharp
+    using UnityEngine;
+    using UnityEngine.UI;
+    
+    public class AspectRatio : MonoBehaviour
+    {
+        Canvas canvas;
+        CanvasScaler canvasScaler;
+        private void Awake()
+        {
+            canvas = GetComponent<Canvas>();
+            canvasScaler = canvas.GetComponent<CanvasScaler>();
+    
+            //기본 해상도 비율
+            float fixedAspectRatio = 9f / 16f;
+    
+            //현재 해상도 비율
+            float currentAspectRatio = (float)Screen.width / (float)Screen.height;
+    
+            //현재 해상도 가로 비율이 더 길 경우
+            if (currentAspectRatio > fixedAspectRatio) canvasScaler.matchWidthOrHeight = 0;
+            //현재 해상도의 세로 비율이 더 길 경우
+            else if (currentAspectRatio < fixedAspectRatio) canvasScaler.matchWidthOrHeight = 1;
+        }
+    }
+    
+    ```
+
+  </details>
+
+
+
+* ### 유저 정보
+
+  <details>
+    <summary> User.cs </summary>
+
+    ```csharp
+    using System.Collections.Generic;
+    using UnityEngine;
+    
+    public class User : MonoBehaviour
+    {
+    
+        public static User Instance;
+        private void Awake()
+        {
+            if (Instance == null)
+            {
+                DontDestroyOnLoad(gameObject);
+                Instance = this;
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+            //else if (Instance != null)
+            //    return;
+            //DontDestroyOnLoad(gameObject);
+        }
+    
+        private void Start()
+        {
+    
+            LoadUserData();
+        }
+    
+        public int bestScore;
+        public void AddBestScore(int c)
+        {
+            bestScore += c;
+        }
+    
+        public int hp = 10;
+        public void AddHp(int c)
+        {
+            hp += c;
+        }
+    
+        public int maxHp = 10;
+        public void AddMaxHp(int c)
+        {
+            maxHp += c;
+        }
+    
+        public int coin;
+        public void AddCoin(int c)
+        {
+            coin += c;
+            Debug.Log($"코인 {coin} 저장 됐습니다");
+        }
+    
+        public int goldCoin;
+        public void AddGoldCoin(int c)
+        {
+            goldCoin += c;
+        }
+    
+        public int copperCoin;
+        public void AddCopperCoin(int c)
+        {
+            copperCoin += c;
+        }
+    
+        public CarData carDT;
+        public List<UserCar> userCars = new List<UserCar>();
+        public void PurchasedCar(string key)
+        {
+            UserCar currentUserCar = GetCurrentUserCar();
+            if (currentUserCar != null)
+                currentUserCar.isEquipping = false;
+    
+            UserCar userCar = new UserCar();
+            userCar.carKey = key;
+            userCar.isOwn = true;
+            userCar.isEquipping = true;
+            userCars.Add(userCar);
+        }
+    
+        public UserCar GetCurrentUserCar()
+        {
+            for (int i = 0; i < userCars.Count; i++)
+            {
+                if (userCars[i].isEquipping == true)
+                    return userCars[i];
+            }
+            return null;
+        }
+    
+        public UserCar GetUserCar(string key)
+        {
+            for (int i = 0; i < userCars.Count; i++)
+            {
+                if (userCars[i].carKey == key)
+                    return userCars[i];
+            }
+            return null;
+        }
+    
+        public void EquipCar(string key)
+        {
+            UserCar currentUserCar = GetCurrentUserCar();
+            if (currentUserCar != null)
+            {
+                currentUserCar.isEquipping = false;
+            }
+            UserCar userCar = GetUserCar(key);
+            userCar.isEquipping = true;
+        }
+    
+        private void OnApplicationQuit()
+        {
+            ES3.Save<int>("bestScore", bestScore);
+            ES3.Save<int>("hp", hp);
+            ES3.Save<int>("maxHp", maxHp);
+            ES3.Save<int>("coin", coin);
+            ES3.Save<int>("goldCoin", goldCoin);
+            ES3.Save<int>("copperCoin", copperCoin);
+    
+            // 자동차 리스트 저장
+            ES3.Save<List<UserCar>>("userCars", userCars);
+    
+            Debug.Log("User 데이터 저장 완료!");
+        }
+        public void LoadUserData()
+        {
+            bestScore = ES3.Load<int>("bestScore");
+            hp = ES3.Load<int>("hp");
+            maxHp = ES3.Load<int>("maxHp");
+            coin = ES3.Load<int>("coin");
+            goldCoin = ES3.Load<int>("goldCoin");
+            copperCoin = ES3.Load<int>("copperCoin");
+    
+            // 자동차 리스트 불러오기
+            userCars = ES3.Load<List<UserCar>>("userCars", new List<UserCar>());
+    
+            Debug.Log("User 데이터 불러오기 완료!");
+        }
+    }
+    
+    [System.Serializable]
+    public class UserCar
+    {
+        public string carKey;
+        public bool isOwn;
+        public bool isEquipping;
+    }
+    ```
+
+  </details>
+
+* ### 제목
+
+  <details>
+    <summary> .cs </summary>
+
+
+
+  </details>
+
+  <details>
+    <summary> .cs </summary>
+
+
+
+  </details>
+
+
+
+* ### 제목
+
+  <details>
+    <summary> .cs </summary>
+
+
+
+  </details>
+
+  <details>
+    <summary> .cs </summary>
+
+
+
+  </details>
+
+---
+
+## 트러블슈팅
 
 
 
 ---
 
-## ⏲️ 트러블슈팅
-
-
-
----
-
-## 🧩 기술스택
+## 기술스택
 
 <table>
   <tr>
@@ -86,7 +545,7 @@
 
 ---
 
-## 🚀 사용에셋 목록
+## 사용에셋 목록
 
 <table>
   <tr>
