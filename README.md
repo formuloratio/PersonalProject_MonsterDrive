@@ -95,5 +95,6 @@
   </tr>
   <tr><td> 자동차 효과음 </td><td> [Car Engine Sound - i6 German Free] (https://assetstore.unity.com/packages/audio/sound-fx/transportation/i6-german-free-engine-sound-pack-106037?srsltid=AfmBOopHcGX1xFTncRWssJAH710NPDsPhKaz97XG3vXm9XLLeOe_M30q) </td></tr>
   <tr><td> 배경 </td><td> [Mini Retro - 16bit action/adventure music] (https://assetstore.unity.com/packages/audio/music/mini-retro-16bit-action-adventure-music-315925?srsltid=AfmBOoqHsqErOhten5ja9nxa63NRTcqvXSrvxUyHiJYHfXPO-9vPwimA) </td></tr>
+  <tr><td> 저장 </td><td> [Easy Save - The Complete Save & Load Tool for Unity] (https://assetstore.unity.com/packages/tools/utilities/easy-save-the-complete-save-game-data-serializer-system-768) </td></tr>
   <tr><td> 그 외 </td><td> AI </td></tr>
 </table>
